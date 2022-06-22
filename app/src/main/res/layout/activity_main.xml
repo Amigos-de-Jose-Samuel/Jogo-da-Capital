@@ -7,18 +7,18 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="33dp"
         android:text="Nome do estado"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName" />
+        app:layout_constraintBottom_toTopOf="@+id/capital"
+        app:layout_constraintStart_toStartOf="@+id/capital" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/capital"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="258dp"
@@ -31,22 +31,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/guessBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
         android:layout_marginBottom="25dp"
+        android:onClick="guess"
         android:text="Enviar"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintStart_toStartOf="@+id/button2" />
+        app:layout_constraintBottom_toTopOf="@+id/nextBtn"
+        app:layout_constraintStart_toStartOf="@+id/nextBtn" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/nextBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="129dp"
         android:checkable="false"
         android:clickable="false"
+        android:onClick="next"
         android:text="Próximo"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -54,19 +56,19 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/output"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="126dp"
         android:layout_marginBottom="126dp"
         android:text="Correto!/Errado!"
-        app:layout_constraintBottom_toBottomOf="@+id/button"
+        app:layout_constraintBottom_toBottomOf="@+id/guessBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toTopOf="@+id/capital" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
