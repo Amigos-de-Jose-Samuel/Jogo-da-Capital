@@ -8,12 +8,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     String[] states = {"Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Espírito Santo", "Goiás", "Maranhão", "Mato Grosso", "Mato Grosso do Sul", "Paraíba", "Piauí", "Roraima", "Rondônia"};
     String[] cities = {"Rio Branco", "Maceió", "Macapá", "Manaus", "Salvador", "Fortaleza", "Vitória", "Goiânia", "São Luís", "Cuiabá", "Campo Grande", "João Pessoa", "Teresina", "Boa Vista", "Porto Velho"};
+    List<String> sorteadas = new ArrayList<String>();
     TextView score, state, output;
     EditText input;
     Button guessBtn, nextBtn;
@@ -44,13 +50,26 @@ public class MainActivity extends AppCompatActivity {
 
     public void guess(View view)
     {
-        String res = (input.getText().toString()).toLowerCase(Locale.ROOT);//pego o valor respondido
-        String capital = cities[actual].toLowerCase(Locale.ROOT);//pego a resposta correta
-
+        String res = Pattern.compile("\\p{InCombiningDiacriticalMarks}+")
+                .matcher(Normalizer.normalize((input.getText().toString()), Normalizer.Form.NFD))
+                .replaceAll(""); //Retira todos os acentos
+        res = res.toLowerCase(Locale.ROOT);
+        int contador = 0;
+        for(String item: cities) {
+            if(item.equals(res)) {
+                actual = contador;
+                break;
+            }
+            contador++;
+        }
+        String capitalSemAcento = Pattern.compile("\\p{InCombiningDiacriticalMarks}+")
+                .matcher(Normalizer.normalize(cities[actual].toLowerCase(Locale.ROOT), Normalizer.Form.NFD))
+                .replaceAll(""); //Retira todos os acentos
+        String capital = capitalSemAcento.toLowerCase(Locale.ROOT);
         if(res.equals(capital)) {
             output.setText("Correto!");
             int scoreAtual = Integer.parseInt(score.getText().toString()); // aumento o score
-            score.setText(scoreAtual++);
+            score.setText("Pontuação: "+(scoreAtual + 10) + " pontos");
         } else
             output.setText("Erro, resposta correta: " + capital);
 
@@ -61,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     public void next(View view) {
         draw();
         output.setText("");
+        input.setText("Informe a capital");
         nextBtn.setEnabled(false);
         guessBtn.setEnabled(true);
         count++;
@@ -68,6 +88,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void draw() {
         actual = random.nextInt(14);
+        while(true) {
+            if(Arrays.asList(sorteadas).contains(states[actual]))
+                actual = random.nextInt(14);
+            else
+                break;
+        }
         state.setText(states[actual]);
+        sorteadas.add(states[actual]);
     }
 }
