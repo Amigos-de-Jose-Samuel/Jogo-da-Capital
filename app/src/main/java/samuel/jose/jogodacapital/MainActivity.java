@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     EditText input;
     Button guessBtn, nextBtn;
     Random random = new Random();
-    int actual, count;
+    int actual, count, scoreInt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +38,8 @@ public class MainActivity extends AppCompatActivity {
         guessBtn = findViewById(R.id.guessBtn);
         nextBtn = findViewById(R.id.nextBtn);
 
-        nextBtn.setEnabled(false);
-
         draw(); //sorteia um estado inicial
-        score.setText("0"); //seto o score inicial pra zero
+        score.setText("Pontuação: " + scoreInt + " pontos"); //seto o score inicial pra zero
 
         nextBtn.setEnabled(false);//desabilito o botao de proximo
 
@@ -54,24 +52,16 @@ public class MainActivity extends AppCompatActivity {
                 .matcher(Normalizer.normalize((input.getText().toString()), Normalizer.Form.NFD))
                 .replaceAll(""); //Retira todos os acentos
         res = res.toLowerCase(Locale.ROOT);
-        int contador = 0;
-        for(String item: cities) {
-            if(item.equals(res)) {
-                actual = contador;
-                break;
-            }
-            contador++;
-        }
         String capitalSemAcento = Pattern.compile("\\p{InCombiningDiacriticalMarks}+")
                 .matcher(Normalizer.normalize(cities[actual].toLowerCase(Locale.ROOT), Normalizer.Form.NFD))
                 .replaceAll(""); //Retira todos os acentos
         String capital = capitalSemAcento.toLowerCase(Locale.ROOT);
         if(res.equals(capital)) {
             output.setText("Correto!");
-            int scoreAtual = Integer.parseInt(score.getText().toString()); // aumento o score
-            score.setText("Pontuação: "+(scoreAtual + 10) + " pontos");
+            scoreInt += 10; // aumento o score
+            score.setText("Pontuação: " + scoreInt + " pontos");
         } else
-            output.setText("Erro, resposta correta: " + capital);
+            output.setText("Erro, resposta correta: " + cities[actual]);
 
         nextBtn.setEnabled(count < 5); // se for a quinta resposta ele termina o jogo e nao deixa dar next
         guessBtn.setEnabled(false);
@@ -80,20 +70,16 @@ public class MainActivity extends AppCompatActivity {
     public void next(View view) {
         draw();
         output.setText("");
-        input.setText("Informe a capital");
+        input.setText("");
         nextBtn.setEnabled(false);
         guessBtn.setEnabled(true);
         count++;
     }
 
     private void draw() {
-        actual = random.nextInt(14);
-        while(true) {
-            if(Arrays.asList(sorteadas).contains(states[actual]))
-                actual = random.nextInt(14);
-            else
-                break;
-        }
+        do {
+            actual = random.nextInt(14);
+        } while (sorteadas.contains(states[actual]));
         state.setText(states[actual]);
         sorteadas.add(states[actual]);
     }
